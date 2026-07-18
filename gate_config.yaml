@@ -1,0 +1,26 @@
+# D1 review-proofing gate — FINAL config. WRITTEN BEFORE ANY RUN (9 Jul 2026),
+# per the gate-fix protocol: claims declared up front, no post-hoc waivers.
+require_stats: true
+require_full_suite: true            # S2: canonical 15 corruptions x 5 severities, full test set
+verify_score_files_on_disk: true    # S1: unit hashes must match score files on disk
+
+stats_artifacts:
+  - stats/omnibus.json
+  - stats/posthoc.json
+
+# B1: both claims are covered by two independent public datasets that the run
+# itself produces — no waiver needed or declared.
+comparative_claims:
+  - id: score_pruning_loses_robustness_vs_random
+    description: >
+      Score-based pruning that preserves/improves clean accuracy degrades
+      corrupted-test accuracy relative to random pruning at aggressive
+      keep-ratios (30%, 10%).
+    independent_datasets: [cifar10, cifar100]
+    require_all: true
+  - id: fm_feature_selection_more_shift_stable
+    description: >
+      Selection scored in CLIP/DINOv2 feature space is more shift-stable than
+      loss-geometry scores (EL2N, GraNd, forgetting, entropy).
+    independent_datasets: [cifar10, cifar100]
+    require_all: true

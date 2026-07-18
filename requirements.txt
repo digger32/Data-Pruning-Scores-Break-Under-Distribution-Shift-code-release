@@ -1,0 +1,13 @@
+# D1 environment. Lower bounds now; EXACT pins land at the currency checkpoint:
+# after `pip install -r requirements.txt` on the A100 box run
+#     pip freeze > requirements.lock
+# and commit the lock next to this file (the lock is the citable environment).
+torch>=2.4
+torchvision>=0.19
+timm>=1.0.11
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+scikit-posthocs>=0.9
+matplotlib>=3.8
+pyyaml>=6.0

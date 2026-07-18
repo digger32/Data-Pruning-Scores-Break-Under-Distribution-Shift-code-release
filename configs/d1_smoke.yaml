@@ -1,0 +1,30 @@
+# Stage 0 SMOKE: tiny subset, minutes end-to-end, FULL chain incl. stats+gate.
+# Uses its own scoring/scores dirs (pipeline.sh) so tiny probe stats can never
+# collide with real score files.
+data_dir: data
+train_subset: 2000
+test_subset: 512
+
+datasets: [cifar10]
+methods: [random, el2n, clipfeat]
+keep_ratios: [30]
+seeds: [0]
+include_full_baseline: false
+
+scoring_mode: shared
+shared_score_seed: 0
+
+train: {epochs: 2, batch: 256, lr: 0.2, momentum: 0.9, weight_decay: 0.0005, workers: 2, amp: true}
+probe: {k: 2, epochs: 3, el2n_epoch: 2, grand_epoch: 1, batch: 256, lr: 0.2, momentum: 0.9, weight_decay: 0.0005, workers: 2, amp: true}
+
+fm_models: {clipfeat: vit_base_patch32_clip_224.openai}
+fm_img_size: 224
+fm_batch: 128
+
+eval:
+  batch: 512
+  corruptions: [gaussian_noise, fog]
+  severities: [1, 3]
+  subset: 256
+
+timeouts: {train_unit: 600, probe_unit: 600}

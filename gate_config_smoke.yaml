@@ -1,0 +1,13 @@
+# Gate config for smoke/pilot: same checks, relaxed coverage expectations.
+# NEVER use for the final pass.
+require_stats: true
+require_full_suite: false
+verify_score_files_on_disk: true
+stats_artifacts: [stats/omnibus.json, stats/posthoc.json]
+comparative_claims:
+  - id: score_pruning_loses_robustness_vs_random
+    independent_datasets: [cifar10, cifar100]
+    require_all: false
+  - id: fm_feature_selection_more_shift_stable
+    independent_datasets: [cifar10, cifar100]
+    require_all: false

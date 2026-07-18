@@ -1,0 +1,70 @@
+# D1 scoring-choice ABLATION at keep-50% (supporting material, Table:
+# tables/ablation.csv). SELF-CONTAINED: the canonical comparators (el2n@10,
+# grand@2, clipfeat B/32, dinov2feat S/14) and the random baseline are trained
+# inside THIS run at the same fixed scoring draw (shared, sseed 0), so every
+# cell of the table differs from its comparator in exactly one factor — the
+# scoring choice — and the significance test against random is computed
+# within-run. Score files already exist in scores_v2 (sseed-0 slice of the
+# per-seed final + the FM variants); no rescoring is triggered.
+# forgetting/entropy carry no variant here and are not rerun — they are read
+# from the final run.
+
+data_dir: data
+train_subset: null
+test_subset: null
+
+datasets: [cifar10, cifar100]
+methods: [random,
+          el2n, el2n_e5, el2n_e20,
+          grand, grand_e1, grand_e5,
+          clipfeat, clipfeat_b16,
+          dinov2feat, dinov2feat_b14]
+keep_ratios: [50]
+seeds: [0, 1, 2, 3, 4]
+include_full_baseline: false
+
+scoring_mode: shared
+shared_score_seed: 0
+
+train:
+  epochs: 30
+  batch: 512
+  lr: 0.2
+  momentum: 0.9
+  weight_decay: 0.0005
+  workers: 8
+  amp: true
+
+probe:                       # identical to configs/d1.yaml — probes are shared
+  k: 10
+  epochs: 20
+  el2n_epoch: 10
+  grand_epoch: 2
+  snapshot_epochs: [1, 2, 5, 10, 20]
+  batch: 512
+  lr: 0.2
+  momentum: 0.9
+  weight_decay: 0.0005
+  workers: 8
+  amp: true
+
+fm_models:
+  clipfeat: vit_base_patch32_clip_224.openai        # canonical
+  clipfeat_b16: vit_base_patch16_clip_224.openai    # variant
+  dinov2feat: vit_small_patch14_dinov2.lvd142m      # canonical
+  dinov2feat_b14: vit_base_patch14_dinov2.lvd142m   # variant
+fm_img_size: 224
+fm_batch: 256
+
+eval:
+  batch: 2048
+  corruptions: [gaussian_noise, shot_noise, impulse_noise, defocus_blur,
+                glass_blur, motion_blur, zoom_blur, snow, frost, fog,
+                brightness, contrast, elastic_transform, pixelate,
+                jpeg_compression]
+  severities: [1, 2, 3, 4, 5]
+  subset: null
+
+timeouts:
+  train_unit: 2400
+  probe_unit: 1800

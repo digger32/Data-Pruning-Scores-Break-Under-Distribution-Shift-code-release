@@ -1,0 +1,58 @@
+# D1 — Data-Pruning Scores Break Under Distribution Shift (CDEL, ECCV 2026)
+# Main config. Smoke uses configs/d1_smoke.yaml.
+
+data_dir: data
+train_subset: null          # full 50k train set
+test_subset: null
+
+datasets: [cifar10, cifar100]
+methods: [random, el2n, grand, forgetting, entropy, clipfeat, dinov2feat]
+keep_ratios: [90, 70, 50, 30, 10]
+seeds: [0, 1, 2, 3, 4]
+include_full_baseline: true
+
+# DECISION 14 Jul (supersedes the 19 Jul point): per_seed for the
+# strengthening final; runs/final_20260714_131430 (shared) is the frozen fallback.
+scoring_mode: per_seed       # shared | per_seed
+shared_score_seed: 0
+
+train:
+  epochs: 30
+  batch: 512
+  lr: 0.2                    # OneCycle max_lr; SGD nesterov
+  momentum: 0.9
+  weight_decay: 0.0005
+  workers: 8
+  amp: true
+
+probe:                       # loss-geometry scoring ensemble (per dataset x sseed)
+  k: 10
+  epochs: 20
+  el2n_epoch: 10             # Paul et al. 2021 regime (canonical)
+  grand_epoch: 2             # early-epoch gradient norm (canonical)
+  snapshot_epochs: [1, 2, 5, 10, 20]   # feeds the epoch ablation
+  batch: 512
+  lr: 0.2
+  momentum: 0.9
+  weight_decay: 0.0005
+  workers: 8
+  amp: true
+
+fm_models:
+  clipfeat: vit_base_patch32_clip_224.openai
+  dinov2feat: vit_small_patch14_dinov2.lvd142m
+fm_img_size: 224             # dinov2 pos-embed interpolated from 518; recorded
+fm_batch: 256
+
+eval:
+  batch: 2048
+  corruptions: [gaussian_noise, shot_noise, impulse_noise, defocus_blur,
+                glass_blur, motion_blur, zoom_blur, snow, frost, fog,
+                brightness, contrast, elastic_transform, pixelate,
+                jpeg_compression]
+  severities: [1, 2, 3, 4, 5]
+  subset: null               # full 10k corrupted test set per severity
+
+timeouts:
+  train_unit: 2400           # s; full-data unit ~5 min -> generous headroom
+  probe_unit: 1800
