@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this software or the released artefacts, please cite the paper."
+title: "Data-Pruning Scores Break Under Distribution Shift — code and data release"
+authors:
+  - family-names: Tynchenko
+    given-names: Vadim
+    orcid: "https://orcid.org/0000-0002-3959-2969"
+    affiliation: "Bauman Moscow State Technical University"
+  - family-names: Borodulin
+    given-names: Aleksei
+    orcid: "https://orcid.org/0000-0002-9648-2395"
+    affiliation: "Bauman Moscow State Technical University"
+  - family-names: Kukartsev
+    given-names: Vladislav
+    orcid: "https://orcid.org/0000-0001-6382-1736"
+    affiliation: "Bauman Moscow State Technical University"
+  - family-names: Kurashkin
+    given-names: Sergei O.
+    orcid: "https://orcid.org/0000-0002-4017-4369"
+    affiliation: "Bauman Moscow State Technical University"
+    email: kurashkin@bmstu.ru
+license: MIT
+repository-code: "https://github.com/digger32/Data-Pruning-Scores-Break-Under-Distribution-Shift-code-release"
+keywords:
+  - data pruning
+  - coreset selection
+  - distribution shift
+  - corruption robustness
+  - foundation-model features
+preferred-citation:
+  type: conference-paper
+  title: "Data-Pruning Scores Break Under Distribution Shift"
+  authors:
+    - family-names: Tynchenko
+      given-names: Vadim
+    - family-names: Borodulin
+      given-names: Aleksei
+    - family-names: Kukartsev
+      given-names: Vladislav
+    - family-names: Kurashkin
+      given-names: Sergei O.
+  collection-title: "ECCV 2026 Workshop on Curated Data for Efficient Learning (CDEL)"
+  year: 2026
